@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="  
+	http://www.springframework.org/schema/beans   
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+	http://www.springframework.org/schema/tx   
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd  
+	http://www.springframework.org/schema/context   
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/aop   
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+
+	<!-- 配置只读数据源 -->
+	<bean id="pg_dataSource" class="org.logicalcobwebs.proxool.ProxoolDataSource">
+		<property name="driver" value="${postgres.driverClassName}" />
+		<property name="driverUrl" value="${postgres.url}" />
+		<property name="user" value="${postgres.username}" />
+		<property name="password" value="${postgres.password}" />
+		<!-- <property name="prototypeCount" value="${proxool.prototypeCount}"/>  -->
+		<property name="minimumConnectionCount" value="${proxool.minimumConnectionCount}"></property>
+		<property name="maximumConnectionCount" value="${proxool.maximumConnectionCount}" />
+		<property name="simultaneousBuildThrottle" value="${proxool.simultaneous-build-throttle}" />
+	</bean>
+
+	<!-- myBatis文件 -->
+	<bean id="pg_sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="pg_dataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<property name="mapperLocations" value="classpath*:com/spring/security/integration/*/mapper/*.xml" />
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.spring.security.integration.*.dao" />
+		<property name="sqlSessionFactoryBeanName" value="pg_sqlSessionFactory" />
+	</bean>
+
+	<bean id="pg_jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="pg_dataSource"></property>
+	</bean>
+
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="pg_dataSource" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" />
+</beans>

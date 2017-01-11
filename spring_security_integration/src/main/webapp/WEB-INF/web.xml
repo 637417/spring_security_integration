@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <display-name>spring_security_integration</display-name>
+  
+   <!-- 编码统一最好放最上面，最先加载，防止乱码-->  
+  <filter>
+    <description>字符集过滤器</description>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <description>字符集编码</description>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!-- 需要加载的配置文件   -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:applicationContext.xml</param-value>
+  </context-param>
+  
+  <!-- 通过会话控制来防止用户重复登录  -->
+  <listener>
+    <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+  </listener>
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+  
+  <listener>
+    <description>spring监听器</description>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <listener>
+    <description>防止spring内存溢出监听器</description>
+    <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener </listener-class>
+  </listener>
+  
+  <filter>
+    <filter-name>HiddenHttpMethodFilter</filter-name>
+    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+  </filter>
+  <filter>
+    <filter-name>HttpPutFormContentFilter</filter-name>
+    <filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>HttpPutFormContentFilter</filter-name>
+    <servlet-name>spring_security_integration</servlet-name>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>HiddenHttpMethodFilter</filter-name>
+    <servlet-name>spring_security_integration</servlet-name>
+  </filter-mapping>
+  
+  <!-- SpringSecurity必须的filter   -->
+  <filter>  
+    <filter-name>springSecurityFilterChain</filter-name>  
+    <filter-class>  
+        org.springframework.web.filter.DelegatingFilterProxy  
+    </filter-class>  
+  </filter>  
+  <filter-mapping>  
+      <filter-name>springSecurityFilterChain</filter-name>  
+      <url-pattern>/*</url-pattern>  
+  </filter-mapping>
+  <servlet>
+    <servlet-name>spring_security_integration</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>spring_security_integration</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+     <servlet-name>default</servlet-name>
+     <url-pattern>*.js</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>login.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

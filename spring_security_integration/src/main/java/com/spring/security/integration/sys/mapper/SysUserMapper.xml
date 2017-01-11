@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.spring.security.integration.sys.dao.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="com.spring.security.integration.sys.model.SysUser" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="username" jdbcType="VARCHAR" />
+    <result column="user_password" property="password" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId" jdbcType="VARCHAR" />
+    <result column="function" property="function" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="entry_time" property="entryTime" jdbcType="VARCHAR" />
+    <result column="education" property="education" jdbcType="VARCHAR" />
+    <result column="mailbox" property="mailbox" jdbcType="VARCHAR" />
+    <result column="contact_tel" property="contactTel" jdbcType="VARCHAR" />
+    <result column="contact_address" property="contactAddress" jdbcType="VARCHAR" />
+    <result column="emergent_contact" property="emergentContact" jdbcType="VARCHAR" />
+    <result column="emergent_contact_tel" property="emergentContactTel" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_id, user_name, user_password, department_id, function, status, create_time, 
+    entry_time, education, mailbox, contact_tel, contact_address, emergent_contact, emergent_contact_tel
+  </sql>
+  
+  <!-- 根据userId或用户名查询用户信息，默认全部查询 -->
+  <select id="selectSysUser" resultMap="BaseResultMap" parameterType="com.spring.security.integration.sys.model.SysUser" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user where 1=1 
+    <if test="userId != null">
+    	and user_id = #{userId,jdbcType=INTEGER}
+    </if>
+     <if test="username != null">
+    	and user_name = #{username,jdbcType=VARCHAR}
+    </if>
+    
+  </select>
+  
+  
+  <!-- 删除用户信息 -->
+  <delete id="deleteSysUser" parameterType="java.lang.Integer" >
+    delete from sys_user where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 添加用户信息 -->
+  <insert id="insertSysUser" parameterType="com.spring.security.integration.sys.model.SysUser" >
+    insert into sys_user (
+      user_id, user_name, user_password, department_id, function, status, create_time, entry_time, education, mailbox, contact_tel, contact_address, 
+      emergent_contact, emergent_contact_tel)
+    values (
+      nextval('sys_user_id'), #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{departmentId,jdbcType=VARCHAR}, #{function,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=VARCHAR}, #{entryTime,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, 
+      #{mailbox,jdbcType=VARCHAR}, #{contactTel,jdbcType=VARCHAR}, #{contactAddress,jdbcType=VARCHAR}, 
+      #{emergentContact,jdbcType=VARCHAR}, #{emergentContactTel,jdbcType=VARCHAR})
+  </insert>
+
+  <!-- 更新用户信息 -->
+  <update id="updateSysUserSelective" parameterType="com.spring.security.integration.sys.model.SysUser" >
+    update sys_user
+    <set >
+      <if test="username != null" >
+        user_name = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        user_password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="function != null" >
+        function = #{function,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="entryTime != null" >
+        entry_time = #{entryTime,jdbcType=VARCHAR},
+      </if>
+      <if test="education != null" >
+        education = #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="mailbox != null" >
+        mailbox = #{mailbox,jdbcType=VARCHAR},
+      </if>
+      <if test="contactTel != null" >
+        contact_tel = #{contactTel,jdbcType=VARCHAR},
+      </if>
+      <if test="contactAddress != null" >
+        contact_address = #{contactAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="emergentContact != null" >
+        emergent_contact = #{emergentContact,jdbcType=VARCHAR},
+      </if>
+      <if test="emergentContactTel != null" >
+        emergent_contact_tel = #{emergentContactTel,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 更新用户信息 -->
+  <update id="updateSysUser" parameterType="com.spring.security.integration.sys.model.SysUser" >
+    update sys_user
+    set user_name = #{username,jdbcType=VARCHAR},
+      user_password = #{password,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=VARCHAR},
+      function = #{function,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      entry_time = #{entryTime,jdbcType=VARCHAR},
+      education = #{education,jdbcType=VARCHAR},
+      mailbox = #{mailbox,jdbcType=VARCHAR},
+      contact_tel = #{contactTel,jdbcType=VARCHAR},
+      contact_address = #{contactAddress,jdbcType=VARCHAR},
+      emergent_contact = #{emergentContact,jdbcType=VARCHAR},
+      emergent_contact_tel = #{emergentContactTel,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  
+</mapper>
